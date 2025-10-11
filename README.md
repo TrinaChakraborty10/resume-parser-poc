@@ -305,3 +305,6 @@ For issues or questions:
 
 - **v2.0**: Modern implementation using spaCy 3.x (current)
 - **v1.0**: Legacy implementation using pyresparser (deprecated due to compatibility issues)
+
+## Reference
+ - https://github.com/rex2231/Resume_Parser/blob/main/Res_parser.ipynb
