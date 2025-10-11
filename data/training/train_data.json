@@ -1,0 +1,66 @@
+[
+  [
+    "John Doe is a Software Engineer at Microsoft with 5 years of experience in Python development.",
+    {
+      "entities": [
+        [
+          0,
+          8,
+          "PERSON"
+        ],
+        [
+          14,
+          31,
+          "DESIGNATION"
+        ],
+        [
+          35,
+          44,
+          "COMPANY"
+        ],
+        [
+          50,
+          56,
+          "EXPERIENCE"
+        ],
+        [
+          71,
+          77,
+          "SKILLS"
+        ]
+      ]
+    }
+  ],
+  [
+    "Jane Smith worked as Data Scientist at Google for 3 years specializing in Machine Learning.",
+    {
+      "entities": [
+        [
+          0,
+          10,
+          "PERSON"
+        ],
+        [
+          21,
+          35,
+          "DESIGNATION"
+        ],
+        [
+          39,
+          45,
+          "COMPANY"
+        ],
+        [
+          50,
+          56,
+          "EXPERIENCE"
+        ],
+        [
+          72,
+          88,
+          "SKILLS"
+        ]
+      ]
+    }
+  ]
+]

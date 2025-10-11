@@ -1,0 +1,4 @@
+[50, 56]    John Doe is a Software Engineer at Microsoft with 5 years of experience in Python development.
+[71, 77]    John Doe is a Software Engineer at Microsoft with 5 years of experience in Python development.
+[50, 56]    Jane Smith worked as Data Scientist at Google for 3 years specializing in Machine Learning.
+[72, 88]    Jane Smith worked as Data Scientist at Google for 3 years specializing in Machine Learning.
