@@ -3,6 +3,85 @@ import re
 import pdfplumber
 from pathlib import Path
 
+def insert_into_db(data):
+    """Insert parsed resume data into MySQL database"""
+    import mysql.connector
+    from mysql.connector import Error
+    
+    # Database configuration - replace with your actual credentials
+    db_config = {
+        'host': 'localhost',
+        'user': 'root',
+        'password': 'Kshn099#',
+        'database': 'resume_parsing'
+    }
+    
+    connection = None
+    cursor = None
+    
+    try:
+        # Establish database connection
+        connection = mysql.connector.connect(**db_config)
+        
+        if not connection.is_connected():
+            print("Failed to connect to database")
+            return
+            
+        cursor = connection.cursor()
+        
+        # SQL query to insert data
+        query = """
+        INSERT INTO resume (
+            name, email, mobile_num, skills, cllg_name, degree, 
+            designation, company_names, no_of_pgs, total_experience
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        
+        # Data preparation with explicit type handling
+        skills_str = ', '.join(str(skill) for skill in data.get('skills', []) if skill)
+        company_names = data.get('company_names', [])
+        company_name = str(company_names[0]) if company_names else None
+        
+        # Convert potential None values to empty strings for text fields
+        values = [
+            str(data.get('name', '')) if data.get('name') else '',
+            str(data.get('email', '')) if data.get('email') else '',
+            str(data.get('mobile_number', '')) if data.get('mobile_number') else '',
+            str(data.get('college_name', '')) if data.get('college_name') else '',
+            str(data.get('degree', '')) if data.get('degree') else '',
+            str(data.get('designation', '')) if data.get('designation') else '',
+            str(company_name) if company_name else '',
+            skills_str,
+            int(data.get('no_of_pages', 0)) if data.get('no_of_pages') else 0,
+            str(data.get('total_experience', '')) if data.get('total_experience') else ''
+        ]
+        
+        # Execute and commit
+        cursor.execute(query, values)
+        connection.commit()
+        print(f"Resume data successfully inserted into database. ID: {cursor.lastrowid}")
+        
+    except Error as e:
+        print(f"Database error: {str(e)}")
+        if connection:
+            connection.rollback()
+        # Don't raise the error, just log it
+        return
+        
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        if connection:
+            connection.rollback()
+        # Don't raise the error, just log it
+        return
+        
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+            print("Database connection closed")
+
 class ModernResumeParser:
     def __init__(self, pdf_path):
         self.pdf_path = pdf_path
@@ -17,6 +96,9 @@ class ModernResumeParser:
     
     def get_extracted_data(self):
         """Extract various information from resume"""
+        doc = self.nlp(self.text)  # Check first 100 chars
+        for ent in doc.ents:
+            print(ent.text, ent.label_)
         data = {
             "name": self._extract_name(),
             "email": self._extract_email(),
@@ -29,13 +111,15 @@ class ModernResumeParser:
             "no_of_pages": self._get_page_count(),
             "total_experience": self._extract_experience()
         }
+        insert_into_db(data)  # Hypothetical function to store data
         return data
     
     def _extract_name(self):
         """Extract name using spaCy NER and common patterns"""
         # First try spaCy NER on the first part of the document
-        doc = self.nlp(self.text[:1000])  # Check first 1000 chars
+        doc = self.nlp(self.text[:100])  # Check first 100 chars
         for ent in doc.ents:
+            # print(ent.text, ent.label_)
             if ent.label_ == "PERSON":
                 # Filter out common false positives
                 if len(ent.text.split()) >= 2 and ent.text.lower() not in ['microsoft azure', 'bachelor of technology']:
@@ -65,6 +149,9 @@ class ModernResumeParser:
         # Multiple phone patterns
         patterns = [
             r'\b\d{10}\b',  # 10 digits
+            r'\+91\d{10}\b',
+            r"^[+]{1}(?:[0-9\\-\\(\\)\\/" \
+              "\\.]\\s?){6,15}[0-9]{1}$",  # International format
             r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',  # XXX-XXX-XXXX format
             r'\b\(\d{3}\)\s?\d{3}[-.]?\d{4}\b',  # (XXX) XXX-XXXX format
             r'\b\+\d{1,3}[-.]?\d{3,4}[-.]?\d{3,4}[-.]?\d{3,4}\b'  # International format
@@ -89,7 +176,9 @@ class ModernResumeParser:
             'Machine Learning', 'Deep Learning', 'AI', 'Data Science', 'Analytics',
             'TensorFlow', 'PyTorch', 'Scikit-learn', 'Pandas', 'NumPy',
             'Linux', 'Unix', 'Windows', 'MacOS',
-            'Agile', 'Scrum', 'DevOps', 'CI/CD'
+            'Agile', 'Scrum', 'DevOps', 'CI/CD',
+            'DBMS', 'Machine Learning',
+            'Andoid Studio', 'iOS', 'Swift', 'Objective-C',
         ]
         
         found_skills = []
@@ -139,6 +228,8 @@ class ModernResumeParser:
         """Extract degree information"""
         degree_patterns = [
             r'\b(B\.?Tech|Bachelor of Technology|BE|Bachelor of Engineering)\b',
+            r'\b(B\.?E\.?)\b',
+            r'\b(Bachelor of Engineering)\b',
             r'\b(M\.?Tech|Master of Technology|ME|Master of Engineering)\b',
             r'\b(PhD|Ph\.D|Doctor of Philosophy)\b',
             r'\b(MBA|Master of Business Administration)\b',

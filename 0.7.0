@@ -1,0 +1,21 @@
+Collecting pdfplumber
+  Downloading pdfplumber-0.11.7-py3-none-any.whl (60 kB)
+     ---------------------------------------- 60.0/60.0 kB 1.6 MB/s eta 0:00:00
+Collecting pypdfium2>=4.18.0
+  Downloading pypdfium2-4.30.0-py3-none-win_amd64.whl (2.9 MB)
+     ---------------------------------------- 2.9/2.9 MB 23.1 MB/s eta 0:00:00
+Collecting Pillow>=9.1
+  Downloading pillow-12.0.0-cp310-cp310-win_amd64.whl (7.0 MB)
+     ---------------------------------------- 7.0/7.0 MB 13.2 MB/s eta 0:00:00
+Collecting pdfminer.six==20250506
+  Downloading pdfminer_six-20250506-py3-none-any.whl (5.6 MB)
+     ---------------------------------------- 5.6/5.6 MB 29.8 MB/s eta 0:00:00
+Collecting cryptography>=36.0.0
+  Downloading cryptography-46.0.3-cp38-abi3-win_amd64.whl (3.5 MB)
+     ---------------------------------------- 3.5/3.5 MB 8.0 MB/s eta 0:00:00
+Requirement already satisfied: charset-normalizer>=2.0.0 in d:\trina_data\work\resume-parser-poc\myvenv_3_10\lib\site-packages (from pdfminer.six==20250506->pdfplumber) (3.4.3)
+Requirement already satisfied: typing-extensions>=4.13.2 in d:\trina_data\work\resume-parser-poc\myvenv_3_10\lib\site-packages (from cryptography>=36.0.0->pdfminer.six==20250506->pdfplumber) (4.15.0)
+Requirement already satisfied: cffi>=2.0.0 in d:\trina_data\work\resume-parser-poc\myvenv_3_10\lib\site-packages (from cryptography>=36.0.0->pdfminer.six==20250506->pdfplumber) (2.0.0)
+Requirement already satisfied: pycparser in d:\trina_data\work\resume-parser-poc\myvenv_3_10\lib\site-packages (from cffi>=2.0.0->cryptography>=36.0.0->pdfminer.six==20250506->pdfplumber) (2.23)
+Installing collected packages: pypdfium2, Pillow, cryptography, pdfminer.six, pdfplumber
+Successfully installed Pillow-12.0.0 cryptography-46.0.3 pdfminer.six-20250506 pdfplumber-0.11.7 pypdfium2-4.30.0

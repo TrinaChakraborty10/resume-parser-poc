@@ -1,13 +1,12 @@
 import spacy
-from pyresparser import ResumeParser
+from modern_resume_parser import ResumeParser
 import warnings
-import nltk
-nltk.download('stopwords')
 # Ignore warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Parse the resume file
-data = ResumeParser("C:/Users/10723269/Downloads/AniruddhaLaha_resume.pdf").get_extracted_data()
+resparser = ResumeParser("C://Users//Aditi//Downloads//SANSKRITA_SINGH_RESUME.pdf")
+data = resparser.get_extracted_data()
 
 # Print extracted data
 print("Name:", data["name"])
